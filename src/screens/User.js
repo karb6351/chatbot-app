@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, SafeAreaView } from 'react-native'
+
+import Login from './Login'
 
 export default class User extends Component {
   render() {
     return (
-      <View>
-        <Text> this is user view </Text>
-      </View>
+      // <SafeAreaView>
+      //   <Text> this is user view </Text>
+      // </SafeAreaView>
+      <Login />
     )
   }
 }
