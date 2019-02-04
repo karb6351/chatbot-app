@@ -7,7 +7,7 @@ import Tag from './Tag';
 import ImageHeader from './ImageHeader';
 import { Button } from 'native-base';
 
-function RouteCardItem() {
+function RouteCardItem(props) {
   return (
     <View style={styles.cardContainer}>
       <ImageHeader title="Route title" source={require('../../asset/images/test.jpeg')} />
@@ -31,10 +31,7 @@ function RouteCardItem() {
         </View>
         <View style={styles.cardRow}>
           <Text style={styles.descriptionText}>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-            Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque 
-            penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec 
-            quam felis, ultricies nec, pellentesque eu, pretium quis, sem. 
+            {props.text}
           </Text>
         </View>
         <View style={styles.bottomRow}>
