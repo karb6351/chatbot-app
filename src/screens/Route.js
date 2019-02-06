@@ -3,7 +3,6 @@ import { Text, ScrollView, StyleSheet } from 'react-native'
 
 import RouteCardItem from '../containers/RouteCardItem'
 
-
 export default class Route extends Component {
   static navigationOptions = {
     title: 'Routes',
