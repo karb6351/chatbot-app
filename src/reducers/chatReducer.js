@@ -2,7 +2,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 
 import * as actionType from '../actions/chatAction/actionType';
 
-const initState = { context: null, intent: null, messageList: [] };
+const initState = { context: null, intent: null, messageList: [], location: { origin: null, destination: null} };
 
 export default function(state = initState, { type, payload }) {
 	switch (type) {
@@ -26,6 +26,22 @@ export default function(state = initState, { type, payload }) {
 			return {
 				...state,
 				intent: payload
+			}
+		case actionType.SET_ORIGIN_LOCATION:
+			return {
+				...state,
+				location: {
+					...state.location,
+					origin: payload
+				}
+			}
+		case actionType.SET_DESTINATION:
+			return {
+				...state,
+				location: {
+					...state.location,
+					destination: payload
+				}
 			}
 		default:
 			return state;

@@ -31,13 +31,13 @@ const BottomNavigator = createAppContainer(
 					)
 				}
 			},
-			User: {
-				screen: User,
-				navigationOptions: {
-					tabBarLabel: 'User',
-					tabBarIcon: ({ focused, horizontal, tintColor }) => <Icon name="ios-contact" size={28} color={tintColor} />
-				}
-			}
+			// User: {
+			// 	screen: User,
+			// 	navigationOptions: {
+			// 		tabBarLabel: 'User',
+			// 		tabBarIcon: ({ focused, horizontal, tintColor }) => <Icon name="ios-contact" size={28} color={tintColor} />
+			// 	}
+			// }
 		},
 		{
 			initialRouteName: 'Chat',
@@ -51,7 +51,7 @@ const BottomNavigator = createAppContainer(
 					height: 50,
 					paddingTop: 5
 				}
-			}
+			},
 		}
 	)
 );

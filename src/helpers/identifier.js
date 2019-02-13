@@ -10,7 +10,7 @@ export const register = async () => {
   try{
     const id = await asyncStorage.get(IDNETIFIER);
     if (!id){
-      const id = getIdentifier();		
+      const id = getIdentifier();
       await asyncStorage.set(IDNETIFIER, id);
     }
   }catch(error){

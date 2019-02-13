@@ -35,4 +35,16 @@ export function setIntent(intent){
 	}
 }
 
+export function setOriginLocation(origin){
+	return {
+		type: actionType.SET_ORIGIN_LOCATION,
+		payload: origin
+	}
+}
 
+export function setDestination(destination){
+	return {
+		type: actionType.SET_DESTINATION,
+		payload: destination
+	}
+}

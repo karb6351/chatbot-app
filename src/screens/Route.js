@@ -1,23 +1,89 @@
-import React, { Component } from 'react'
-import { Text, ScrollView, StyleSheet } from 'react-native'
+import React, { Component } from 'react';
+import { Text, ScrollView, StyleSheet } from 'react-native';
+import { connect } from 'react-redux';
 
-import RouteCardItem from '../containers/RouteCardItem'
+import RouteCardItem from '../containers/RouteCardItem';
 
-export default class Route extends Component {
-  static navigationOptions = {
-    title: 'Routes',
-  };
-  
-  render() {
-    const hi = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. "
-    return (
-      <ScrollView>
-        {Array(5).fill(1).map((item, index) => <RouteCardItem text={hi}  key={index}/>)}
-      </ScrollView>
-    )
-  }
+import { addMessageItem, setDestination } from '../actions/chatAction/action';
+
+import * as routeApi from '../api/route';
+import * as chatApi from '../api/chat';
+import { bulidChatbotMessage } from '../helpers/message';
+
+class Route extends Component {
+	static navigationOptions = {
+		title: 'Routes'
+	};
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			routes: [],
+			joined: false
+		};
+	}
+
+	componentDidMount = async () => {
+		try {
+			const response = await routeApi.getRoutes();
+			const { routes } = response.data;
+			this.setState({
+				...this.state,
+				routes
+			});
+		} catch (error) {}
+	};
+
+	handleJoinRoute = async (id) => {
+		try {
+			const response = await chatApi.join(id);
+			const { messages, restaurant } = response.data;
+			this.props.addMessageItem({
+				_id: 1,
+				text: 'Food route is selected',
+				createdAt: new Date(),
+				system: true
+			});
+			messages.map((message) => this.props.addMessageItem(bulidChatbotMessage(message)));
+			this.props.setDestination(restaurant);
+			this.setState({
+				...this.state,
+				joined: true
+			})
+			this.props.navigation.navigate('Chat');
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	handleMap = () => {
+		console.log(this.props.navigation);
+		this.props.navigation.navigate('Map');
+	}
+
+
+	render() {
+		const routesCard = this.state.routes.map((route, index) => (
+			<RouteCardItem
+				title={route.title}
+				thumbnail={route.thumbnail}
+				joinHandler={() => this.handleJoinRoute(route.id)}
+				mapHandler={() => this.handleMap()}
+        key={index}
+        isJoined={this.state.joined}
+			/>
+		));
+		return <ScrollView>{routesCard}</ScrollView>;
+	}
 }
 
-const styles = StyleSheet.create({
-  
-})
+const mapDispatchToProps = (dispatch) => ({
+	addMessageItem: (message) => {
+		dispatch(addMessageItem(message));
+	},
+	setDestination: (destination) => {
+		dispatch(setDestination(destination));
+	}
+});
+
+export default connect(null, mapDispatchToProps)(Route);

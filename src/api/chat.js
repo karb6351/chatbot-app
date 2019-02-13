@@ -8,8 +8,10 @@ export const init = (identifier, username = null) => {
 	});
 };
 
-export const join = () => {
-
+export const join = id => {
+	return Axios.axios.post('chat/join', {
+		routeId: id
+	})
 }
 
 export const message = (message, context, intent) => {

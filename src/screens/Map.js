@@ -1,22 +1,41 @@
-import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import React, { Component } from 'react';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import MapComponent from '../components/Map';
 
-export default class Map extends Component {
-  render() {
-    return (
-      <View style={styles.wrapper}>
-        <MapView provider={PROVIDER_GOOGLE} style={styles.map} />
-      </View>
-    )
-  }
+import { connect } from 'react-redux'
+
+class Map extends Component {
+	render() {
+		return (
+			<View style={styles.wrapper}>
+				<MapComponent
+					location={this.props.origin}
+					destination={null}
+					height={Dimensions.get('window').height}
+					isFullscreen={true}
+					isOpen={true}
+					loadingIndicatorColor="#666666"
+					loadingBackgroundColor="#eeeeee"
+					mode="walking"
+				/>
+			</View>
+		);
+	}
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1
-  },
-  map: {
-    ...StyleSheet.absoluteFill 
-  }
+	wrapper: {
+		flex: 1
+	},
+	map: {
+		...StyleSheet.absoluteFill
+	}
 });
+
+
+const mapStateToProps = (state) => ({
+	origin: state.chat.location.origin,
+});
+
+
+export default connect(mapStateToProps, null)(Map);
