@@ -17,8 +17,8 @@ function RouteCardItem(props) {
 			<View style={styles.cardBody}>
 				<View style={styles.cardRow}>
 					<View style={styles.tagGroup}>
-						<Tag color="#e5d529" text="潮洲" />
-						<Tag color="#4adb34" text="廣東" />
+						<Tag color="#e5d529" text="Taiwan" />
+						{/* <Tag color="#4adb34" text="廣東" /> */}
 					</View>
 					<View>
 						<Button iconLeft small bordered style={styles.routeButton} onPress={props.mapHandler}>

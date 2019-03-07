@@ -7,7 +7,10 @@ export const IDNETIFIER = 'identifier';
 export const USER_CHATROOM_ID = 1;
 export const CHATBOT_CHATROOM_ID = 2;
 
-export const BASE_API_URL = 'http://192.168.2.182:8000';
+// export const BASE_API_URL = 'http://192.168.2.182:8000';
+// export const BASE_API_URL = 'http://192.168.240.131:8000';
+// export const BASE_API_URL = 'http://192.168.240.120:8000';
+export const BASE_API_URL = 'http://172.18.89.68:8000';
 
 export const CHATBOT_AVATAR = require('./asset/images/chatbot.png');
 export const CHATBOT_NAME = "Chatbot";

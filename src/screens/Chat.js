@@ -91,43 +91,47 @@ class Chat extends Component {
 			toggleMap: this.toggleMap
 		});
 
-		try {
-			getCurrentLocation(
-				Dimensions.get('window').width,
-				this.state.isFullscreen ? Dimensions.get('window').height : this.state.mapWrapperHeight,
-				this.onRegionChange
-			);
-			// this.setState({
-			// 	...this.state,
-			// 	mapRegion: location,
-			// 	// If there are no new values set the current ones
-			// 	lastLat: location.latitude || this.state.lastLat,
-			// 	lastLong: location.longitude || this.state.lastLong
-			// });
-		} catch (error) {
-			// console.error(error.message);
-		}
+		getCurrentLocation(
+			Dimensions.get('window').width,
+			this.state.isFullscreen ? Dimensions.get('window').height : this.state.mapWrapperHeight,
+			this.onRegionChange
+		);
+		// this.setState({
+		// 	...this.state,
+		// 	mapRegion: location,
+		// 	// If there are no new values set the current ones
+		// 	lastLat: location.latitude || this.state.lastLat,
+		// 	lastLong: location.longitude || this.state.lastLong
+		// });
 	};
 
 	onRegionChange = async (error, location) => {
 		if (error) {
 			console.log(error);
 		} else {
-			const id = await asyncStorage.get(IDNETIFIER);
-			if (id) {
-				const response = await locationApi.update(location);
-				const { eventType, messages } = response.data;
-				if (location) {
-					this.props.setOriginLocation(formatLocation(location));
-				}
-				if (!eventType) {
-					console.log('No event happen');
-				} else {
-					// handle event
-					switch (eventType) {
+			try {
+				const id = await asyncStorage.get(IDNETIFIER);
+				if (id) {
+					const response = await locationApi.update(location);
+					const { eventType, messages } = response.data;
+					if (location) {
+						this.props.setOriginLocation(formatLocation(location));
 					}
+					if (!eventType) {
+						console.log('No event happen');
+					} else {
+						// handle event
+						console.log({ eventType, messages });
+						switch (eventType) {
+							case 'restaurant':
+								messages.map((message) => this.props.addMessageItem(bulidChatbotMessage(message)));
+								break;
+						}
+					}
+					this.forceUpdate();
 				}
-				this.forceUpdate();
+			} catch (error) {
+				console.log(error);
 			}
 		}
 	};
@@ -144,7 +148,7 @@ class Chat extends Component {
 			this.props.setContext(context);
 			this.props.setIntent(intent);
 			console.log(messages);
-			messages.map((message) => this.props.addMessageItem(bulidChatbotMessage({ message })));
+			messages.map((message) => this.props.addMessageItem(bulidChatbotMessage(message)));
 		} catch (error) {
 			console.error(error.message);
 		}
@@ -184,18 +188,9 @@ class Chat extends Component {
 					showsUserLocation={true}
 					mode="walking"
 				>
-					{this.props.origin ? (
-						<MapView.Marker
-							coordinate={this.props.origin}
-							title="Current location"
-							
-						/>
-					) : null}
+					{this.props.origin ? <MapView.Marker coordinate={this.props.origin} title="Current location" /> : null}
 					{this.props.destination ? (
-						<MapView.Marker
-						coordinate={this.props.destination.coordinate}
-							title={this.props.destination.name}
-						/>
+						<MapView.Marker coordinate={this.props.destination.coordinate} title={this.props.destination.name} />
 					) : null}
 				</Map>
 				<GiftedChat
