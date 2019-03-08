@@ -52,7 +52,7 @@ export const OptionCloseButton = styled(OptionMapButton)`
 `;
 
 export const OptionExpandButton = styled(OptionMapButton)`
-border-radius: 0;
+  border-radius: 0;
   border-top-right-radius: 8;
   border-bottom-right-radius: 8;
 `;
