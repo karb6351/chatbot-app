@@ -48,3 +48,10 @@ export function setDestination(destination){
 		payload: destination
 	}
 }
+
+export function setIsJoin(isJoin){
+	return {
+		type: actionType.SET_IS_JOIN,
+		payload: isJoin
+	}
+}

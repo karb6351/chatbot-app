@@ -5,6 +5,7 @@ import Info from 'react-native-device-info';
 export const getCurrentLocation = (width, height, cb) => {
 	this.watchID = navigator.geolocation.watchPosition(
 		(position) => {
+			console.log(position);
 			// Create the object to update this.state.mapRegion through the onRegionChange function
 			const region = formatLocation(position.coords, width, height);
 			cb(null, region)

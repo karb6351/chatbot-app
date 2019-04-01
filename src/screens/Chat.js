@@ -90,7 +90,7 @@ class Chat extends Component {
 		this.props.navigation.setParams({
 			toggleMap: this.toggleMap
 		});
-
+		
 		getCurrentLocation(
 			Dimensions.get('window').width,
 			this.state.isFullscreen ? Dimensions.get('window').height : this.state.mapWrapperHeight,
@@ -113,20 +113,17 @@ class Chat extends Component {
 				const id = await asyncStorage.get(IDNETIFIER);
 				if (id) {
 					const response = await locationApi.update(location);
-					const { eventType, messages } = response.data;
+					const { hasEvent, messages } = response.data;
+					console.log(hasEvent, messages );
 					if (location) {
 						this.props.setOriginLocation(formatLocation(location));
 					}
-					if (!eventType) {
+					if (!hasEvent) {
 						console.log('No event happen');
 					} else {
 						// handle event
-						console.log({ eventType, messages });
-						switch (eventType) {
-							case 'restaurant':
-								messages.map((message) => this.props.addMessageItem(bulidChatbotMessage(message)));
-								break;
-						}
+						console.log({ hasEvent, messages });
+						messages.map((message) => this.props.addMessageItem(bulidChatbotMessage(message)));
 					}
 					this.forceUpdate();
 				}
@@ -144,15 +141,21 @@ class Chat extends Component {
 		this.props.addMessageItem(userMessages);
 		try {
 			const response = await chatApi.message(userMessages[0].text, this.props.content, this.props.intent);
-			const { messages, context, intent } = response.data;
+			const { messages, context, intent, restaurant } = response.data;
 			this.props.setContext(context);
 			this.props.setIntent(intent);
-			console.log(messages);
 			messages.map((message) => this.props.addMessageItem(bulidChatbotMessage(message)));
+			if (this.shouldMoveToNextRestaurant(restaurant)){
+				this.props.setDestination(restaurant);
+			}
 		} catch (error) {
 			console.error(error.message);
 		}
 	};
+
+	shouldMoveToNextRestaurant(restaurant){
+		return this.props.isJoin && JSON.stringify(this.props.destination) !== JSON.stringify(restaurant);
+	}
 
 	toggleMap = () => {
 		this.setState({ ...this.state, isOpen: !this.state.isOpen });
@@ -210,7 +213,8 @@ const mapStateToProps = (state) => ({
 	content: state.chat.context,
 	intent: state.chat.intent,
 	origin: state.chat.location.origin,
-	destination: state.chat.location.destination
+	destination: state.chat.location.destination,
+	isJoin: state.chat.isJoin
 });
 
 const mapDispatchToProps = (dispatch) => ({

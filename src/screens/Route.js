@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import RouteCardItem from '../containers/RouteCardItem';
 
-import { addMessageItem, setDestination } from '../actions/chatAction/action';
+import { addMessageItem, setDestination, setIsJoin } from '../actions/chatAction/action';
 
 import * as routeApi from '../api/route';
 import * as chatApi from '../api/chat';
@@ -46,10 +46,11 @@ class Route extends Component {
 			});
 			messages.map((message) => this.props.addMessageItem(bulidChatbotMessage(message)));
 			this.props.setDestination(restaurant);
-			this.setState({
-				...this.state,
-				joined: true
-			})
+			// this.setState({
+			// 	...this.state,
+			// 	joined: true
+			// })
+			this.props.setIsJoin(true);
 			this.props.navigation.navigate('Chat');
 		} catch (error) {
 			console.error(error);
@@ -65,12 +66,13 @@ class Route extends Component {
 	render() {
 		const routesCard = this.state.routes.map((route, index) => (
 			<RouteCardItem
+				route={route}
 				title={route.title}
 				thumbnail={route.thumbnail}
 				joinHandler={() => this.handleJoinRoute(route.id)}
 				mapHandler={() => this.handleMap()}
         key={index}
-        isJoined={this.state.joined}
+        isJoined={this.props.isJoin}
 			/>
 		));
 		return <ScrollView>{routesCard}</ScrollView>;
@@ -83,7 +85,15 @@ const mapDispatchToProps = (dispatch) => ({
 	},
 	setDestination: (destination) => {
 		dispatch(setDestination(destination));
+	},
+	setIsJoin: (isJoin) => {
+		dispatch(setIsJoin(isJoin))
 	}
 });
 
-export default connect(null, mapDispatchToProps)(Route);
+const mapStateToProps = (state) => ({
+	destination: state.chat.location.destination,
+	isJoin: state.chat.isJoin
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Route);

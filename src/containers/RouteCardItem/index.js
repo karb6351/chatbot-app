@@ -7,17 +7,39 @@ import Tag from './Tag';
 import ImageHeader from './ImageHeader';
 import { Button } from 'native-base';
 
-import { BASE_API_URL } from '../../constant';
+import { BASE_API_URL, MAIN_COLOR } from '../../constant';
+
+function getThumbnail(thumbnail){
+	const obj = JSON.parse(thumbnail);
+	return BASE_API_URL + obj[0].dataURL;
+}
+
+function calculateTotalTime(events){
+	const time = events.reduce((sum, current) => {
+		return sum + current.duration
+	}, 0);
+	return  Math.round(time / 1000 / 60 * 100) / 100;
+}
+
+function getTags(route){
+	const restaurants = route.event.map(item => item.Restaurant);
+	const cultures = restaurants.map(item => item.culture);
+	const faltedCultures = [].concat.apply([], cultures);
+	const distinctCultures = [...new Set(faltedCultures)];
+	console.log(distinctCultures);
+	return distinctCultures;
+}
 
 function RouteCardItem(props) {
 	return (
 		<View style={styles.cardContainer}>
 			{/* <ImageHeader title="Route title" source={require('../../asset/images/test.jpeg')} /> */}
-			<ImageHeader title={props.title} source={{ uri: BASE_API_URL + props.thumbnail }} />
+			<ImageHeader title={props.title} source={{ uri: getThumbnail(props.thumbnail) }} />
 			<View style={styles.cardBody}>
 				<View style={styles.cardRow}>
 					<View style={styles.tagGroup}>
-						<Tag color="#e5d529" text="Taiwan" />
+						{getTags(props.route).map((item, index) => <Tag key={index} color={item.color} text={item.name} />)}
+						{/* <Tag color="#e5d529" text="Taiwan" /> */}
 						{/* <Tag color="#4adb34" text="廣東" /> */}
 					</View>
 					<View>
@@ -29,8 +51,8 @@ function RouteCardItem(props) {
 					</View>
 				</View>
 				<View style={{ ...styles.cardRow, justifyContent: 'flex-start' }}>
-					<SimpleDescription icon="ios-time" message="Around 2hrs" />
-					<SimpleDescription icon="ios-restaurant" message="4 restaurants" />
+					<SimpleDescription icon="ios-time" message={`Around ${calculateTotalTime(props.route.event)}min`} />
+					<SimpleDescription icon="ios-restaurant" message={`${props.route.event.length} restaurants`} />
 				</View>
 				{/* <View style={styles.cardRow}>
           <Text style={styles.descriptionText}>
@@ -84,7 +106,7 @@ const styles = StyleSheet.create({
 	joinButton: {
 		paddingHorizontal: 10,
 		borderRadius: 4,
-		backgroundColor: 'tomato'
+		backgroundColor: MAIN_COLOR
 	},
 	joinedButton:{
 		backgroundColor: 'grey'
