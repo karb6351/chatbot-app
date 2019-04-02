@@ -14,7 +14,8 @@ export const BASE_API_URL = 'http://192.168.2.182:8000';
 
 
 
-export const CHATBOT_AVATAR = require('./asset/images/chatbot.png');
+// export const CHATBOT_AVATAR = require('./asset/images/chatbot.png');
+export const CHATBOT_AVATAR = require('./asset/images/chatbot.jpeg');
 export const CHATBOT_NAME = "Chatbot";
 
 export const GOOGLE_MAPS_APIKEY = 'AIzaSyB6p0nvit_q-oiHdeP6WxmUjvcLjohsoH8'

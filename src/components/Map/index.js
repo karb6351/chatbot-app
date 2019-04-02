@@ -6,7 +6,7 @@ import {
 	MapFullScreenContainer,
 	MapEmbedContainer
 } from './style';
-import { PROVIDER_GOOGLE } from 'react-native-maps';
+import { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import React, { Fragment, Component } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Transition } from 'react-spring/renderprops';
@@ -19,22 +19,28 @@ export default class Map extends Component {
 		this.forceUpdate();
 	}
 	render() {
-		const { height, isFullscreen, isOpen, closeMap, toggleExpandMap, location, destination, mode } = this.props;
+		const { height, isFullscreen, isOpen, closeMap, toggleExpandMap, location, destination, mode, event } = this.props;
+		const destMarker = destination ? {
+			latitude: destination.coordinate.latitude,
+			longitude: destination.coordinate.longitude
+		} : null;
 		const direction =
 		location && destination ? (
 			<MapViewDirections
 				strokeWidth={7}
-				strokeColor="#498bf4"
+				strokeColor={ event ? event.color : '#498bf4' }
 				origin={location}
 				destination={destination.coordinate}
 				apikey={GOOGLE_MAPS_APIKEY}
 				mode={mode}
 			/>
 		) : null;
+		
 		const Content = (
 			<Fragment>
-				<MapContent provider={PROVIDER_GOOGLE} region={location}>
+				<MapContent provider={PROVIDER_GOOGLE} region={location} showsUserLocation={true}>
 					{direction}
+					{destMarker ? <Marker coordinate={destMarker} title={destination.name} /> : null}
 				</MapContent>
 				{toggleExpandMap && closeMap ? (
 					<OptionMapButtonGroup>

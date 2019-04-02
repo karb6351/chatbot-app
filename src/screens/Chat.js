@@ -19,7 +19,8 @@ import {
 	setContext,
 	setIntent,
 	setOriginLocation,
-	setDestination
+	setDestination,
+	setEvent
 } from '../actions/chatAction/action';
 import { USER_CHATROOM_ID, IDNETIFIER, MAP_ICON_COLOR } from '../constant';
 import { bulidChatbotMessage } from '../helpers/message';
@@ -113,7 +114,7 @@ class Chat extends Component {
 				const id = await asyncStorage.get(IDNETIFIER);
 				if (id) {
 					const response = await locationApi.update(location);
-					const { hasEvent, messages } = response.data;
+					const { hasEvent, messages, event } = response.data;
 					console.log(hasEvent, messages );
 					if (location) {
 						this.props.setOriginLocation(formatLocation(location));
@@ -124,6 +125,9 @@ class Chat extends Component {
 						// handle event
 						console.log({ hasEvent, messages });
 						messages.map((message) => this.props.addMessageItem(bulidChatbotMessage(message)));
+						if (event){
+							this.props.setEvent(event);
+						}
 					}
 					this.forceUpdate();
 				}
@@ -141,9 +145,12 @@ class Chat extends Component {
 		this.props.addMessageItem(userMessages);
 		try {
 			const response = await chatApi.message(userMessages[0].text, this.props.content, this.props.intent);
-			const { messages, context, intent, restaurant } = response.data;
+			const { messages, context, intent, restaurant, event } = response.data;
 			this.props.setContext(context);
 			this.props.setIntent(intent);
+			if (event){
+				this.props.setEvent(event);
+			}
 			messages.map((message) => this.props.addMessageItem(bulidChatbotMessage(message)));
 			if (this.shouldMoveToNextRestaurant(restaurant)){
 				this.props.setDestination(restaurant);
@@ -190,11 +197,8 @@ class Chat extends Component {
 					moveOnMarkerPress={false}
 					showsUserLocation={true}
 					mode="walking"
+					event={this.props.event}
 				>
-					{this.props.origin ? <MapView.Marker coordinate={this.props.origin} title="Current location" /> : null}
-					{this.props.destination ? (
-						<MapView.Marker coordinate={this.props.destination.coordinate} title={this.props.destination.name} />
-					) : null}
 				</Map>
 				<GiftedChat
 					messages={this.props.messages}
@@ -214,7 +218,8 @@ const mapStateToProps = (state) => ({
 	intent: state.chat.intent,
 	origin: state.chat.location.origin,
 	destination: state.chat.location.destination,
-	isJoin: state.chat.isJoin
+	isJoin: state.chat.isJoin,
+	event: state.chat.event
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -235,6 +240,9 @@ const mapDispatchToProps = (dispatch) => ({
 	},
 	setDestination: (origin) => {
 		dispatch(setDestination(origin));
+	},
+	setEvent: (event) => {
+		dispatch(setEvent(event));
 	}
 });
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import RouteCardItem from '../containers/RouteCardItem';
 
-import { addMessageItem, setDestination, setIsJoin } from '../actions/chatAction/action';
+import { addMessageItem, setDestination, setIsJoin, setEvent } from '../actions/chatAction/action';
 
 import * as routeApi from '../api/route';
 import * as chatApi from '../api/chat';
@@ -37,7 +37,7 @@ class Route extends Component {
 	handleJoinRoute = async (id) => {
 		try {
 			const response = await chatApi.join(id);
-			const { messages, restaurant } = response.data;
+			const { messages, restaurant, event } = response.data;
 			this.props.addMessageItem({
 				_id: 1,
 				text: 'Food route is selected',
@@ -46,6 +46,7 @@ class Route extends Component {
 			});
 			messages.map((message) => this.props.addMessageItem(bulidChatbotMessage(message)));
 			this.props.setDestination(restaurant);
+			this.props.setEvent(event);
 			// this.setState({
 			// 	...this.state,
 			// 	joined: true
@@ -88,6 +89,9 @@ const mapDispatchToProps = (dispatch) => ({
 	},
 	setIsJoin: (isJoin) => {
 		dispatch(setIsJoin(isJoin))
+	},
+	setEvent: (event) => {
+		dispatch(setEvent(event))
 	}
 });
 

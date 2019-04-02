@@ -2,7 +2,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 
 import * as actionType from '../actions/chatAction/actionType';
 
-const initState = { context: null, intent: null, messageList: [], location: { origin: null, destination: null}, isJoin: false };
+const initState = { context: null, intent: null, messageList: [], location: { origin: null, destination: null}, isJoin: false, event: null };
 
 export default function(state = initState, { type, payload }) {
 	switch (type) {
@@ -47,6 +47,11 @@ export default function(state = initState, { type, payload }) {
 			return {
 				...state,
 				isJoin: payload
+			}
+		case actionType.SET_EVENT:
+			return {
+				...state,
+				event: payload
 			}
 		default:
 			return state;

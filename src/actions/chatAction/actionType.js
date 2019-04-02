@@ -10,3 +10,5 @@ export const SET_ORIGIN_LOCATION = 'SET_ORIGIN_LOCATION';
 export const SET_DESTINATION = 'SET_DESTINATION';
 
 export const SET_IS_JOIN = 'SET_IS_JOIN';
+
+export const SET_EVENT = 'SET_EVENT';

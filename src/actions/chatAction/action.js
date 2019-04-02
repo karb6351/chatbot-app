@@ -55,3 +55,11 @@ export function setIsJoin(isJoin){
 		payload: isJoin
 	}
 }
+
+export function setEvent(event){
+	return {
+		type: actionType.SET_EVENT,
+		payload: event
+	}
+}
+

@@ -18,7 +18,7 @@ function calculateTotalTime(events){
 	const time = events.reduce((sum, current) => {
 		return sum + current.duration
 	}, 0);
-	return  Math.round(time / 1000 / 60 * 100) / 100;
+	return  Math.round(time / 1000 / 60);
 }
 
 function getTags(route){
@@ -26,7 +26,6 @@ function getTags(route){
 	const cultures = restaurants.map(item => item.culture);
 	const faltedCultures = [].concat.apply([], cultures);
 	const distinctCultures = [...new Set(faltedCultures)];
-	console.log(distinctCultures);
 	return distinctCultures;
 }
 
@@ -39,8 +38,6 @@ function RouteCardItem(props) {
 				<View style={styles.cardRow}>
 					<View style={styles.tagGroup}>
 						{getTags(props.route).map((item, index) => <Tag key={index} color={item.color} text={item.name} />)}
-						{/* <Tag color="#e5d529" text="Taiwan" /> */}
-						{/* <Tag color="#4adb34" text="廣東" /> */}
 					</View>
 					<View>
 						<Button iconLeft small bordered style={styles.routeButton} onPress={props.mapHandler}>
